@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import androidx.annotation.Nullable;
-
 public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context) {
         super(context, "db.db", null, 1);
@@ -15,7 +13,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase DB) {
-        DB.execSQL("create Table Entraineurs(id INTEGER primary key autoincrement, prenom TEXT , nom TEXT, adresse TEXT, specialite TEXT, salle TEXT, FOREIGN KEY(salle) REFERENCES Salles(nom))");
+        DB.execSQL("create Table Entraineurs(id INTEGER primary key autoincrement, prenom TEXT , nom TEXT, adresse TEXT, specialite TEXT, photo BLOB, salle TEXT, FOREIGN KEY(salle) REFERENCES Salles(nom))");
         DB.execSQL("create Table Salles(nom TEXT primary key, adresse TEXT)");
     }
 
@@ -87,7 +85,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Boolean insertEntraineur(String prenom, String name, String adresse, String specialite, String salle)
+    public Boolean insertEntraineur(String prenom, String name, String adresse, String specialite, String salle, byte[] image)
     {
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -96,6 +94,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("specialite", specialite);
         contentValues.put("salle", salle);
         contentValues.put("adresse", adresse);
+        contentValues.put("photo", image);
         long result=DB.insert("Entraineurs", null, contentValues);
         if(result==-1){
             return false;
@@ -148,5 +147,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-
+    public Cursor getEntraineur(String id)
+    {
+        SQLiteDatabase DB = this.getWritableDatabase();
+        Cursor cursor = DB.rawQuery("Select * from Entraineurs WHERE id=?", new String[]{id});
+        return cursor;
+    }
 }

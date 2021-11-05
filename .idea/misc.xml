@@ -5,10 +5,11 @@
       <map>
         <entry key="..\:/Users/MSI/AndroidStudioProjects/GestionSallesSport/app/src/main/res/drawable/custom_button.xml" value="0.3828125" />
         <entry key="..\:/Users/MSI/AndroidStudioProjects/GestionSallesSport/app/src/main/res/layout/activity_main.xml" value="0.2957427536231884" />
-        <entry key="..\:/Users/MSI/AndroidStudioProjects/GestionSallesSport/app/src/main/res/layout/add_entraineur.xml" value="0.33" />
+        <entry key="..\:/Users/MSI/AndroidStudioProjects/GestionSallesSport/app/src/main/res/layout/add_entraineur.xml" value="0.25" />
         <entry key="..\:/Users/MSI/AndroidStudioProjects/GestionSallesSport/app/src/main/res/layout/add_salle.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/MSI/AndroidStudioProjects/GestionSallesSport/app/src/main/res/layout/entraineur.xml" value="0.2644927536231884" />
         <entry key="..\:/Users/MSI/AndroidStudioProjects/GestionSallesSport/app/src/main/res/layout/entraineurs.xml" value="0.2644927536231884" />
+        <entry key="..\:/Users/MSI/AndroidStudioProjects/GestionSallesSport/app/src/main/res/layout/show_entraineur.xml" value="0.75" />
       </map>
     </option>
   </component>

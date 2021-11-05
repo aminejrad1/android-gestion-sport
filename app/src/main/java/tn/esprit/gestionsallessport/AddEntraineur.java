@@ -1,28 +1,66 @@
 package tn.esprit.gestionsallessport;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddEntraineur extends AppCompatActivity {
     EditText prenom_text, nom_text, adresse_text, specialite_text, id_text;
-    Button insert, update, delete, view;
+    Button insert, update, delete, view, viewall, imageupload;
     DBHelper DB;
     Cursor cursor;
+    ImageView uploadedimage;
+    byte[] byteArray;
+    private static int RESULT_LOAD_IMAGE = 1;
+
+    private void getImageFromAlbum(){
+        try{
+            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(i, RESULT_LOAD_IMAGE);
+        }catch(Exception exp){
+            Log.i("Error",exp.toString());
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==RESULT_LOAD_IMAGE && resultCode== RESULT_OK && data!=null)
+        {
+            Uri selectedImage=data.getData();
+            uploadedimage.setImageURI(selectedImage);
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byteArray = stream.toByteArray();
+                bitmap.recycle();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,7 +75,10 @@ public class AddEntraineur extends AppCompatActivity {
         insert = findViewById(R.id.addE_button);
         update = findViewById(R.id.updateE_button);
         delete = findViewById(R.id.deleteE_button);
-        view = findViewById(R.id.showE_button);
+        viewall = findViewById(R.id.showAll_button);
+        view= findViewById(R.id.showE_button);
+        imageupload= findViewById(R.id.upload_button);
+        uploadedimage= findViewById(R.id.imagetoupload);
         DB = new DBHelper(this);
 
         List<String> spinnerArray = new ArrayList<String>();
@@ -58,6 +99,17 @@ public class AddEntraineur extends AppCompatActivity {
         Spinner sItems = (Spinner) findViewById(R.id.spinner);
         sItems.setAdapter(adapter);
 
+        imageupload.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                getImageFromAlbum();
+            }
+        });
+
+
+
         insert.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -68,12 +120,16 @@ public class AddEntraineur extends AppCompatActivity {
                 String specialiteTXT = specialite_text.getText().toString();
                 String adresseTXT = adresse_text.getText().toString();
                 String salleTXT= sItems.getSelectedItem().toString();
+                if(byteArray!=null) {
+                    Boolean checkinsertdata = DB.insertEntraineur(prenomTXT, nameTXT, adresseTXT, specialiteTXT, salleTXT, byteArray);
+                    if (checkinsertdata == true) {
+                        Toast.makeText(AddEntraineur.this, "New Entry Inserted", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(AddEntraineur.this, "New Entry Not Inserted", Toast.LENGTH_SHORT).show();
+                    }
 
-                Boolean checkinsertdata = DB.insertEntraineur(prenomTXT, nameTXT,  adresseTXT,  specialiteTXT,  salleTXT);
-                if(checkinsertdata==true)
-                    Toast.makeText(AddEntraineur.this, "New Entry Inserted", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(AddEntraineur.this, "New Entry Not Inserted", Toast.LENGTH_SHORT).show();
+                    byteArray = null;
+                }
             }
         });
 
@@ -113,7 +169,7 @@ public class AddEntraineur extends AppCompatActivity {
             }
         });
 
-        view.setOnClickListener(new View.OnClickListener()
+        viewall.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -140,5 +196,17 @@ public class AddEntraineur extends AppCompatActivity {
                 builder.show();
             }
         });
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String idTXT= id_text.getText().toString();
+                Intent i=new Intent(AddEntraineur.this, ShowEntraineur.class);
+                i.putExtra("id", idTXT);
+                startActivity(i);
+            }
+        });
+
+
     }
 }
