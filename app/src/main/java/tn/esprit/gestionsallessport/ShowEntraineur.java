@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ public class ShowEntraineur extends AppCompatActivity {
     ImageView downloadedimage;
     DBHelper DB;
     Cursor cursor;
+    Button pageentraineur, pagesalle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -35,6 +38,24 @@ public class ShowEntraineur extends AppCompatActivity {
         specialite_text= findViewById(R.id.specialite);
         id_text=findViewById(R.id.id);
         downloadedimage=findViewById(R.id.photo);
+        pageentraineur= findViewById(R.id.boutton_entraineur3);
+        pagesalle= findViewById(R.id.boutton_salles3);
+
+        pageentraineur.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(ShowEntraineur.this, AddEntraineur.class);
+                startActivity(i);
+            }
+        });
+
+        pagesalle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(ShowEntraineur.this, AddSalle.class);
+                startActivity(i);
+            }
+        });
 
         cursor=DB.getEntraineur(id);
         if(cursor.getCount()!=0)

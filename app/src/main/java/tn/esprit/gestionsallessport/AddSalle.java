@@ -1,5 +1,6 @@
 package tn.esprit.gestionsallessport;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class AddSalle extends AppCompatActivity {
     EditText nom_salle, adresse_salle;
-    Button insert, update, delete, view;
+    Button insert, update, delete, view, pageentraineur, pagesalle;
     DBHelper DB;
 
     @Override
@@ -26,6 +27,8 @@ public class AddSalle extends AppCompatActivity {
         update = findViewById(R.id.update_button);
         delete = findViewById(R.id.delete_button);
         view = findViewById(R.id.view_button);
+        pageentraineur= findViewById(R.id.boutton_entraineur4);
+        pagesalle= findViewById(R.id.boutton_salles4);
         DB = new DBHelper(this);
 
         insert.setOnClickListener(new View.OnClickListener()
@@ -99,6 +102,22 @@ public class AddSalle extends AppCompatActivity {
                 builder.setTitle("Salles de sport:");
                 builder.setMessage(buffer.toString());
                 builder.show();
+            }
+        });
+
+        pageentraineur.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(AddSalle.this, AddEntraineur.class);
+                startActivity(i);
+            }
+        });
+
+        pagesalle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(AddSalle.this, AddSalle.class);
+                startActivity(i);
             }
         });
     }

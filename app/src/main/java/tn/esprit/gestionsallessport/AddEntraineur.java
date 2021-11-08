@@ -27,7 +27,7 @@ import java.util.List;
 
 public class AddEntraineur extends AppCompatActivity {
     EditText prenom_text, nom_text, adresse_text, specialite_text, id_text;
-    Button insert, update, delete, view, viewall, imageupload;
+    Button insert, update, delete, view, viewall, imageupload, pageentraineur, pagesalle;
     DBHelper DB;
     Cursor cursor;
     ImageView uploadedimage;
@@ -79,6 +79,26 @@ public class AddEntraineur extends AppCompatActivity {
         view= findViewById(R.id.showE_button);
         imageupload= findViewById(R.id.upload_button);
         uploadedimage= findViewById(R.id.imagetoupload);
+        pageentraineur= findViewById(R.id.boutton_entraineur2);
+        pagesalle= findViewById(R.id.boutton_salles2);
+
+        pageentraineur.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(AddEntraineur.this, AddEntraineur.class);
+                startActivity(i);
+            }
+        });
+
+        pagesalle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(AddEntraineur.this, AddSalle.class);
+                startActivity(i);
+            }
+        });
+
+
         DB = new DBHelper(this);
 
         List<String> spinnerArray = new ArrayList<String>();
